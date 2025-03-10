@@ -32,6 +32,14 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         add(UpdatePlayerStateEvent(playerState.playing));
       });
 
+            player.processingStateStream.listen((processingState) {
+        if (processingState == ProcessingState.completed) {
+          player.seek(Duration.zero); // Reset to start
+          player.play(); // Auto-restart
+        }
+      });
+
+
       emit(AudioPlayerLoaded(
           position: Duration.zero,
           duration: player.duration ?? Duration.zero,
